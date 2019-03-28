@@ -1,0 +1,68 @@
+body {
+  margin: 0;
+  padding: 0;
+  /* font-family: sans-serif; */
+}
+
+
+.App {
+  text-align: center;
+}
+
+table {
+  padding: 0px;
+  margin: 0px;
+  border: 1px;
+ margin: 0 auto;
+
+}
+tr {
+height: 30px;
+  padding: 0px;
+  margin: 0px;
+}
+
+
+td {
+  padding: 0px;
+  margin: 0px;
+  width: 30px;
+  border: 1px;
+  border-style: solid;
+}
+
+.hit {background-color: gray}
+.empty {background-color: white}
+.tried {background-color: aliceblue}
+.killed {background-color: red}
+.ship {background-color: blue}
+
+.bold{font-weight: bold}
+
+
+.example-enter {
+  opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+.example-appear {
+  opacity: 0.01;
+}
+
+.example-appear.example-appear-active {
+  opacity: 1;
+  transition: opacity 1.5s ease-in;
+}
