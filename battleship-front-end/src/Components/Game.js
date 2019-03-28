@@ -42,7 +42,6 @@ class Board extends Component {
     //     }
     // }
     convertToInt(x) {
-        console.log(x)
         for (var j = 0; j < 10; j++) {
             if (x.includes(j)) {
                 return j;
@@ -61,12 +60,10 @@ class Board extends Component {
         if (toLong === false) {
             for (var i = 0; i < this.state.ships[this.state.shipNum].length; i++) {
                 if (this.state.Rotation === true) {
-                    console.log("P-" + (this.convertToInt(e.target.id.slice(1, 3)) + i) + e.target.id.slice(3, 5))
                     if (document.getElementById("P-" + (this.convertToInt(e.target.id.slice(1, 3)) + i) + e.target.id.slice(3, 5)).style.backgroundColor === 'blue') {
                         alreadyShipped = true
                     }
                 } else {
-                    console.log("P-" + (e.target.id.slice(2, 3)) + "-" + (this.convertToInt(e.target.id.slice(4, 5)) - 1))
                     if (document.getElementById("P-" + (e.target.id.slice(2, 3)) + "-" + (this.convertToInt(e.target.id.slice(4, 5)) + i)).style.backgroundColor === 'blue') {
                         alreadyShipped = true
                     }
@@ -75,13 +72,15 @@ class Board extends Component {
             if (this.state.shipNum < 10 && alreadyShipped === false) {
                 for (var i = 0; i < this.state.ships[this.state.shipNum].length; i++) {
                     if (this.state.Rotation === true) {
-                        console.log("P-" + (this.convertToInt(e.target.id.slice(1, 3)) + i) + e.target.id.slice(3, 5))
                         document.getElementById("P-" + (this.convertToInt(e.target.id.slice(1, 3)) + i) + e.target.id.slice(3, 5)).style.backgroundColor = 'blue';
                         this.setState({ Rotation: true })
+                        this.state.Grid[this.convertToInt(e.target.id.slice(1, 3)) + i][this.convertToInt(e.target.id.slice(3, 5))] = 1
+                        this.forceUpdate()
                     } else {
-                        console.log("P-" + (e.target.id.slice(2, 3)) + "-" + (this.convertToInt(e.target.id.slice(4, 5)) - 1))
                         document.getElementById("P-" + (e.target.id.slice(2, 3)) + "-" + (this.convertToInt(e.target.id.slice(4, 5)) + i)).style.backgroundColor = 'blue';
                         this.setState({ Rotation: false })
+                        this.state.Grid[this.convertToInt(e.target.id.slice(1, 3))][this.convertToInt(e.target.id.slice(3, 5))+i] = 1
+                        this.forceUpdate()
                     }
                 }
                 this.setState({ shipNum: this.state.shipNum + 1 })
@@ -90,8 +89,22 @@ class Board extends Component {
         }
     }
     fire(e) {
-        
+        fetch("")
+        .then(response => {
+            return(response.json());    
+        })
+        .then(response => {
+            if(this.state.Grid[response.X][response.Y] === 1){
+                this.state.Grid[response.X][response.Y] = 2
+                this.forceUpdate()
+            }else if(this.state.Grid[response.X][response.Y] === 0){
+                this.state.Grid[response.X][response.Y] = 2
+                this.forceUpdate()
+            }
+        })
     }
+
+     
     render() {
         let that = this
         // if(this.state.x===0){
