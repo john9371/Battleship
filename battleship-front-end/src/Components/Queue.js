@@ -23,7 +23,7 @@ class Queue extends Component {
         return (
             <div style={{borderWidth: 1, borderStyle: 'solid', borderColor: 'black'}}>
             
-                <Form >
+                <Form onSubmit={this.handleSubmit.bind(this)} >
                     <Form.Group controlId="formName">
                         <Form.Label>Name</Form.Label> <br />
                         <Form.Control required type="name" name="name"placeholder="Enter name" value={this.state.name} onChange={this.handleChange.bind(this, 'name')} /><br />
@@ -35,7 +35,7 @@ class Queue extends Component {
             </div>
         );
         }else {
-            return (<Redirect to="/Game" />)
+            return (<Redirect to="/Game/?name=${this.props.name}" />)
         }
     }
 }

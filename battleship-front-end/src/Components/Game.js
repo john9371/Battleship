@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
 //import Rows from './Grid.js'
-const setupJS = require('../JS/gameJS.js').setupJS
+// const setupJS = require('../JS/gameJS.js').setupJS
 
 class Board extends Component {
     constructor(props) {
@@ -18,8 +18,8 @@ class Board extends Component {
             shipNum: 0,
             ships: [[1, 1], [1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1], [1, 1], [1, 1], [1, 1, 1], [1, 1], [1, 1, 1, 1, 1, 1]],
             // true is Horizontal false is Vertical
-            Rotation: true
-
+            Rotation: true,
+            opponent: {}
         }
         this.convertToInt = this.convertToInt.bind(this);
         this.placeShip = this.placeShip.bind(this);
@@ -41,6 +41,32 @@ class Board extends Component {
 
     //     }
     // }
+    componentDidMount() {
+        var playerId = null;
+        window.addEventListener("BeforeUnloadEvent", e => {
+            fetch("http://localhost:5000/game", { method: 'delete' })
+        })
+        fetch("http://localhost:5000/game", { method: 'Get' })
+            .then((response) => {
+                return response.json
+            })
+            .then((event) => {
+                if (event != []) {
+                    this.setState({ opponent: event[0] })
+                    fetch(("http://localhost:5000/game/?id=" + this.state.opponent.playerId), { method: 'Put' })
+                } else {
+                    fetch(("http://localhost:5000/game/?name=" + this.props.name), { method: 'Post' })
+                    .then((response)=>{
+                        playerId=response;
+                    })
+                }
+            })
+        if (this.state.opponent == {} && playerId != null) {
+            setInterval(function () {
+                fetch(("http://localhost:5000/game/?id="+ playerId))
+            }, 100)
+        }
+    }
     convertToInt(x) {
         for (var j = 0; j < 10; j++) {
             if (x.includes(j)) {
@@ -70,41 +96,46 @@ class Board extends Component {
                 }
             }
             if (this.state.shipNum < 10 && alreadyShipped === false) {
-                for (var i = 0; i < this.state.ships[this.state.shipNum].length; i++) {
+                for (var j = 0; j < this.state.ships[this.state.shipNum].length; j++) {
                     if (this.state.Rotation === true) {
-                        document.getElementById("P-" + (this.convertToInt(e.target.id.slice(1, 3)) + i) + e.target.id.slice(3, 5)).style.backgroundColor = 'blue';
+                        document.getElementById("P-" + (this.convertToInt(e.target.id.slice(1, 3)) + j) + e.target.id.slice(3, 5)).style.backgroundColor = 'blue';
                         this.setState({ Rotation: true })
-                        this.state.Grid[this.convertToInt(e.target.id.slice(1, 3)) + i][this.convertToInt(e.target.id.slice(3, 5))] = 1
+                        this.state.Grid[this.convertToInt(e.target.id.slice(1, 3)) + j][this.convertToInt(e.target.id.slice(3, 5))] = 1
                         this.forceUpdate()
                     } else {
-                        document.getElementById("P-" + (e.target.id.slice(2, 3)) + "-" + (this.convertToInt(e.target.id.slice(4, 5)) + i)).style.backgroundColor = 'blue';
+                        document.getElementById("P-" + (e.target.id.slice(2, 3)) + "-" + (this.convertToInt(e.target.id.slice(4, 5)) + j)).style.backgroundColor = 'blue';
                         this.setState({ Rotation: false })
-                        this.state.Grid[this.convertToInt(e.target.id.slice(1, 3))][this.convertToInt(e.target.id.slice(3, 5))+i] = 1
+                        this.state.Grid[this.convertToInt(e.target.id.slice(1, 3))][this.convertToInt(e.target.id.slice(3, 5)) + j] = 1
                         this.forceUpdate()
                     }
                 }
                 this.setState({ shipNum: this.state.shipNum + 1 })
-
             }
         }
     }
     fire(e) {
-        fetch("")
-        .then(response => {
-            return(response.json());    
-        })
-        .then(response => {
-            if(this.state.Grid[response.X][response.Y] === 1){
-                this.state.Grid[response.X][response.Y] = 2
-                this.forceUpdate()
-            }else if(this.state.Grid[response.X][response.Y] === 0){
-                this.state.Grid[response.X][response.Y] = 2
-                this.forceUpdate()
-            }
-        })
+        console.log(e.target.innerHTML)
+        console.log(e.target.id.slice(0, 1))
+
+        if (e.target.id.slice(0, 1) === 'O' && e.target.innerHTML === "") {
+            e.target.innerHTML = "<img src='../hit.png'/>"
+            // fetch("", {method: post})
+            //     .then(response => {
+            //         return (response.json());
+            //     })
+            //     .then(response => {
+            //         if (this.state.Grid[response.X][response.Y] === 1) {
+            //             this.state.Grid[response.X][response.Y] = 2
+            //             this.forceUpdate()
+            //         } else if (this.state.Grid[response.X][response.Y] === 0) {
+            //             this.state.Grid[response.X][response.Y] = 2
+            //             this.forceUpdate()
+            //         }
+            //     })
+        }
     }
 
-     
+
     render() {
         let that = this
         // if(this.state.x===0){
@@ -237,12 +268,6 @@ class BuildCubeVert extends Component {
 class Rows extends Component {
     constructor(props) {
         super(props)
-    }
-    fire(e) {
-
-    }
-    placeShip(e) {
-
     }
     render() {
         return (
