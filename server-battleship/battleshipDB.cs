@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
+
+
 namespace BattleshipAPI
 {
     public class BattleshipDb : DbContext
@@ -9,7 +11,7 @@ namespace BattleshipAPI
         public DbSet<IsHit> IsHit { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Filename=../Snake/Snake/DB/HighScore.db");
+            optionsBuilder.UseSqlServer("Filename=Battleship");
         }
     }
     public class MatchDb : DbContext
@@ -18,7 +20,7 @@ namespace BattleshipAPI
         public DbSet<MatchQ> matches { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Filename=../Snake/Snake/DB/HighScore.db");
+            optionsBuilder.UseSqlServer("Filename=Battleship");
         }
     }
     

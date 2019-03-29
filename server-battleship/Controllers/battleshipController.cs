@@ -77,6 +77,23 @@ namespace BattleshipAPI.Controllers
                 }
             }
         }
+        public MatchQ Put(int id, string name){
+            using(MatchDb db = new MatchDb()){
+                bool x = false;
+                db.matches.First(t => t.gameId == id).name = name;
+                db.matches.First(t => t.gameId == id).ready = true;
+                while (x == false)
+                {
+                    x = true;
+                    Random rnd = new Random();
+                    for (int i = 0; i < db.matches.ToList().Count(); i++)
+                    {
+                        if (db.matches.Where(t => t.playerId == rnd.Next(10000, 1000000)).Count() > 0) // Check if element exists
+                            x=false;
+                    }
+                }
+            }
+        }
         // DELETE api/waiting/5
         [HttpDelete("{id}")]
         public void Delete(int id)
@@ -96,7 +113,7 @@ namespace BattleshipAPI.Controllers
         // GET api/Battleship
         [HttpGet]
         //public IEnumerable<MatchQ> Get()
-        public string Get(int id)
+        public Battleship Get(int id)
         {
             using (BattleshipDb db = new BattleshipDb())
             {
@@ -111,7 +128,8 @@ namespace BattleshipAPI.Controllers
             {
                 if (db.Battleships.Where(t => t.gameId == id).Count() > 0)
                 {
-                    db.Battleships.First(t => t.gameId == id).hit = hit;
+                    db.Battleships.First(t => t.gameId == id).xCoord = x;
+                    db.Battleships.First(t => t.gameId == id).yCoord = y;
                     if (db.IsHit.First(t => t.gameId == id).whoseTurn == 0)
                     {
                         db.IsHit.First(t => t.gameId == id).whoseTurn++;
@@ -147,7 +165,7 @@ namespace BattleshipAPI.Controllers
         }
     }
     [Route("api/hit/[controller]")]
-    public class BattleshipGameController : Controller
+    public class BattleshipHitController : Controller
     {
         [HttpGet]
         //public IEnumerable<MatchQ> Get()
@@ -159,7 +177,7 @@ namespace BattleshipAPI.Controllers
             }
         }
          [HttpPut]
-        public string Put(var someRandomObject)
+        public string Put(IsHit someRandomObject)
         {
             using (BattleshipDb db = new BattleshipDb())
             {

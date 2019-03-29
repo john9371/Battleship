@@ -3,13 +3,6 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
-  <configuration>
-    <system.web>
-        <httpHandlers>
-          <add verb="GET,HEAD,POST,OPTIONS" path="*.aspx" type="System.Web.UI.PageHandlerFactory" />
-        </httpHandlers>
-    </system.web>
-  </configuration>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
